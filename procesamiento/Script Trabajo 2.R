@@ -22,66 +22,46 @@ ELSOC_Long_2016_2023 <- read_dta("~/Trabajo-2-Pendola-Quezada/input/ELSOC_Long_2
 
 ELSOC <- ELSOC_Long_2016_2023 %>% 
   filter(ola==6) %>%
-  select(sexo_enc,
-         edad_enc,
+  select(r13_ideol_01,
          c05_12,
-         c06_01,
-         c06_02,
-         c06_03,
-         c15,
-         c16,
          t10)
 
 
-
-
-ELSOC <- ELSOC %>%
-  mutate(
-    sexo_enc = case_when(
-      sexo_enc == "Masculino" ~ 1,
-      sexo_enc == "Femenino" ~ 2))
-
-
-ELSOC <- ELSOC %>% select(Sexo=sexo_enc, Edad=edad_enc, Medios=c05_12, UDI=c06_01, DemocraciaCrist=c06_02, Comunistas=c06_03, PosicionPolitica=c15, Partido=c16, SeguridadBarrio=t10)
-
-
-
-## Remover NA's
-ELSOC <- ELSOC %>% 
+ELSOC_Limpia <- ELSOC %>% 
   set_na(., na = c(-666,-777,-888,-999)) %>% 
   na.omit()
 
-
-# Tabla de Correlacion
-sjPlot::tab_corr(ELSOC, triangle = "lower")
-
-
-M <- cor(ELSOC, use = "complete.obs")
-M
-corrplot.mixed(M)
-
-
-sjPlot::plot_scatter(ELSOC, PosicionPolitica, SeguridadBarrio)
+ELSOC_Limpia <- ELSOC %>%
+  mutate(
+    r13_ideol_01 = as.numeric(r13_ideol_01),
+    c05_12       = as.numeric(c05_12),
+    t10          = as.numeric(t10))
 
 
 
-# Alpha de Combrach 
+ELSOC_Limpia$r13_ideol_01 <- car::recode(ELSOC_Limpia$r13_ideol_01, 
+                                        "c(1,6)=0; c(2)=1; c(3)=2; c(4)=3; c(5)=4")
 
-escala_PosicionPolitica<- ELSOC %>%
-  select(PosicionPolitica, Medios)
-resultado_alpha <- alpha(escala_PosicionPolitica)
-resultado_alpha$total$raw_alpha
-
-
-#Escala + Grafico
-ELSOC <- ELSOC %>%
-  mutate(escala_PosicionPolitica = (PosicionPolitica + Medios) / 2)
+ELSOC_Limpia$c05_12 <- car::recode(ELSOC_Limpia$c05_12, 
+                                         "c(1)=0; c(2)=1; c(3)=2; c(4)=3; c(5)=4")
 
 
-summary(ELSOC$escala_PosicionPolitica)
+ELSOC_Limpia$t10 <- car::recode(ELSOC_Limpia$t10, 
+                                   "c(1)=0; c(2)=1; c(3)=2; c(4)=3; c(5)=4")
 
 
-hist(ELSOC$escala_PosicionPolitica,
-     main = "Escala de Confianza en los Medios de Comunicacion segun Posicion Politca",
-     xlab = "Promedio de respuestas (1 = Nada, 5 = Mucha)",
-     col = "#A8D5BA", breaks = 10)
+cor(ELSOC_Limpia)
+
+psych::alpha(ELSOC_Limpia)
+
+ELSOC_Limpia <- ELSOC_Limpia %>% 
+  rowwise() %>% 
+  mutate(MediosporPosicion = sum(r13_ideol_01,t10,c05_12))
+summary(ELSOC_Limpia$MediosporPosicion)
+
+
+hist(ELSOC_Limpia$MediosporPosicion,
+     main = "Escala de Confianza en Medios segun Posicion Politica",
+     xlab = "Promedio de respuestas (1 = No Confia, 5 = Confia Mucho)",
+     col = "#607B8B", breaks = 5)
+

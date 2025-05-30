@@ -1,0 +1,338 @@
+---
+title: "Percepcion de Inseguridad Segun Orientacion Politica"
+subtitle: "R para el análisis de datos"
+author: "Tomás Péndola y Erick Quezada"
+date: "2025-05-29"
+lang: es
+format: html
+editor: visual
+bibliography: references.bib
+---
+
+## Introducción
+
+En el contexto actual chileno, donde nos acercamos a las próximas elecciones presidenciales, se han intensificado los discursos mediáticos por parte de los distintos sectores políticos que buscan llegar al sillón presidencial en 2026. Múltiples debates, entrevistas y comentarios han comenzado a circular entre la población chilena, abordando tópicos troncales en las futuras agendas y dejando entrever distintas posturas ideológicas y pragmáticas frente a ellos.
+
+En este escenario, decidimos investigar una de las mayores preocupaciones de la ciudadanía. Tal como indica el estudio *Preocupaciones del Mundo* de la empresa de investigación Ipsos (2024), el sondeo arrojó que en Chile el tema del crimen y la violencia lidera la lista de preocupaciones con un 69%.
+
+Chile lleva tiempo enfrentando un drama importante en torno a este tópico, lo que se refleja en la amplia literatura existente, especialmente desde enfoques que lo abordan mediante variables sociodemográficas. Sin embargo, retomando el actual contexto electoral, nos interesa en particular analizar la incidencia de los medios de comunicación tradicionales, los cuales se encargan de divulgar las agendas de los candidatos y que, estos no solo informan sino que también ayudan a construir marcos interpretativos de la realidad desde una posicion aventajada [@teuna.vandijk2016]. Al mismo tiempo, buscamos entender cómo se articula esta percepción de inseguridad en relación con la tendencia política de la ciudadanía.
+
+Al respecto, autores como [@juanjomedina2003] han señalado que aparentemente existe una relación directa entre poseer una posición más de derecha y el miedo al delito (p. 11). Sin embargo, esta relación no implica necesariamente una causalidad, sino que podría estar enmarcada en un concepto más complejo de “percepción emocional”. Tal como indican [@marcelamuratori2015], la tendencia política influye en un conjunto de percepciones que terminan delegando en “problemáticas de relevancia social, como la inseguridad y el miedo al delito” (p. 17).
+
+Es por ello que el presente trabajo buscará analizar la percepción de inseguridad según la orientación política y la confianza en los medios. Esto, enmarcado en el clima político actual chileno, donde la polarización entre los sectores políticos aumenta de cara a las próximas elecciones presidenciales. Por otro lado, en esta suerte de precampaña, muchos discursos mediáticos ofrecidos por los candidatos han puesto especial foco en el tema de la seguridad, presentándolo como un asunto que debe ser atendido cuanto antes. Consideramos, entonces, relevante comprender qué tanto inciden en la percepción de inseguridad variables como la orientación política y la confianza en los medios de comunicación, ya que planteamos como hipótesis que aquellos encuestados con una mayor tendencia política hacia la derecha y con niveles más altos de confianza en los medios tenderán a mantener mayores niveles de percepción de inseguridad.
+
+Para ello, se analizarán los datos recogidos por el COES a través de su estudio ELSOC del año 2023, centrando el análisis en las variables de "Orientación política", "Confianza en los medios" y "Percepción de seguridad del barrio". La elección de esta base responde a su carácter representativo a nivel nacional y a su solidez metodológica, lo que permite explorar con mayor profundidad las relaciones entre posicionamiento político, confianza institucional y percepciones subjetivas de inseguridad.
+
+# Variables
+
+Como se mencionó anteriormente, las variables a utilizar serán las siguientes:
+
+1.  Posición Política (r13_ideol_01)
+2.  Confianza en los medios de comunicación tradicionales (c05_12)
+3.  Percepción de inseguridad en el barrio de residencia (t10_p).
+
+Para efectos prácticos, se modificaron las categorias de respuesta de la variable r13_ideol_01 en (Derecha, Centro, Izquierda, Ningúno).
+
+```{r librerias, echo=FALSE, warning=FALSE, message=FALSE, collapse=TRUE}
+
+library(pacman)
+pacman::p_load(tidyverse,   # manipulacion datos
+               sjPlot,      # tablas
+               confintr,    # IC
+               gginference, # visualizacion 
+               rempsyc,     # reporte
+               broom,       # varios
+               sjmisc,      # para descriptivos 
+               knitr,
+               haven,
+               kableExtra,
+               stargazer,
+               janitor)            
+
+options(scipen = 999) # para desactivar notacion cientifica
+rm(list = ls()) # para limpiar el entorno de trabajo
+
+```
+
+Esto lo podemos repetir para la carga de la base de datos y el procesamiento de los datos.
+
+```{r datos, echo=FALSE, warning=FALSE, message=FALSE}
+
+ELSOC_Long_2016_2023 <- read_dta("~/Trabajo-2-Pendola-Quezada/input/ELSOC_Long_2016_2023.dta")
+
+ELSOC_2022_Limitada <- ELSOC_Long_2016_2023 %>% select(r13_ideol_01, # orientacion politica
+                          c05_12, # Confianza en los medios
+                          t10) # percecion de Seguridad del barrio
+
+```
+
+Ahora con la base datos abierta procederemos a describr las variables que se usaran para este trabajo, se procedera a Opercionalizar las variables
+
+```{r Operacionalizacion de Variables, echo=FALSE, warning=FALSE, message=FALSE}
+
+ELSOC_2022_Limitada <- ELSOC_2022_Limitada %>%
+  mutate(r13_ideol_01 = na_if(r13_ideol_01, -999),
+         r13_ideol_01 = na_if(r13_ideol_01, -888),
+         r13_ideol_01 = na_if(r13_ideol_01, -777),
+         r13_ideol_01 = na_if(r13_ideol_01, -666))
+
+
+ELSOC_2022_Limitada <- ELSOC_2022_Limitada %>%
+  mutate(c05_12 = na_if(c05_12, -999),
+         c05_12 = na_if(c05_12, -888),
+         c05_12 = na_if(c05_12, -777),
+         c05_12 = na_if(c05_12, -666))
+
+
+ELSOC_2022_Limitada <- ELSOC_2022_Limitada %>%
+  mutate(t10 = na_if(t10, -999),
+         t10 = na_if(t10, -888),
+         t10 = na_if(t10, -777),
+         t10 = na_if(t10, -666))
+```
+
+Se Agrupan los no sabe no responde dentro de los NA y ahora se procederan a ser eliminados
+
+```{r borrar los NA, echo=FALSE, warning=FALSE, message=FALSE}
+
+ELSOC_2022_Limitada <-na.omit(ELSOC_2022_Limitada) 
+```
+
+## Descripción de variables
+
+En este caso, se seleccionaron las variables:
+
+-r13_ideol_01: Sector idiologico con el que se identifica el encuestado
+
+```{r Operacionlizacion de r13_ideol_01, echo=FALSE, warning=FALSE, message=FALSE}
+
+ELSOC_2022_Limitada$r13_ideol_01 <- car::recode(ELSOC_2022_Limitada$r13_ideol_01, "c(1,2)=1; c(3)=2; c(4,5)=3; c(6)=4") #Se recodifica para hacer mas facil analisis estableciendo agrupando Centro derecha y derecha como uno solo, lo mismo para Izquierda, dejadno solos centro y ninguno
+
+ELSOC_2022_Limitada$r13_ideol_01 <- factor(ELSOC_2022_Limitada$r13_ideol_01,
+            labels=c( "Derecha",
+                      "Centro",
+                      "Izquierda",
+                      "Ninguno"),
+            levels=c(1,2,3,4))
+```
+
+Ahora se hara una tabla de frecuencias para esta variable categorica
+
+```{r Tabla de Frecuencia de r13_ideol_01, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Crear tabla con totales
+tabla <- ELSOC_2022_Limitada %>%
+  count(r13_ideol_01) %>%
+  mutate(Porcentaje = round(100 * n / sum(n), 2),
+         r13_ideol_01 = as.character(r13_ideol_01))  # convertir a texto
+
+# Crear la fila de Total
+tabla_total <- tabla %>%
+  summarise(r13_ideol_01 = "Total",
+            n = sum(n),
+            Porcentaje = round(sum(Porcentaje), 2))
+
+# Unir la tabla con la fila de Total
+tabla_final <- bind_rows(tabla, tabla_total)
+
+# Mostrar tabla con estilo
+tabla_final %>%
+  kable("html", caption = "Tabla de Frecuencias de Ideologia Politica con Total") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+```
+
+-   c05_12: Grado de Confianza: en los medios de comunicacion tradicionales
+
+```{r Tabla de Confianza en Medios de c05_12, echo=FALSE, warning=FALSE, message=FALSE}
+
+Confianza <- ELSOC_2022_Limitada %>%
+  summarise(
+    Variable = "c05_12", 
+    media = mean(c05_12, na.rm = TRUE),
+    mediana = median(c05_12, na.rm = TRUE),
+    sd = sd(c05_12, na.rm = TRUE),
+    min = min(c05_12, na.rm = TRUE),
+    max = max(c05_12, na.rm = TRUE),
+    n = sum(!is.na(c05_12))
+  )
+
+Confianza %>%
+  kable(format = "html", caption = "Tabla de Descriptivos para la Confianza en los Medios") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
+
+-   t10: Percepcion de seguridad del barrio
+
+```{r, Tabla de Seguridad de t10, echo=FALSE, warning=FALSE, message=FALSE}
+
+Seguridad <- ELSOC_2022_Limitada %>%
+  summarise(
+    Variable = "t10",  # Aquí agregamos el nombre de la variable
+    media = mean(t10, na.rm = TRUE),
+    mediana = median(t10, na.rm = TRUE),
+    sd = sd(t10, na.rm = TRUE),
+    min = min(t10, na.rm = TRUE),
+    max = max(t10, na.rm = TRUE),
+    n = sum(!is.na(t10))
+  )
+
+Seguridad %>%
+  kable(format = "html", caption = "Tabla de Descriptivos para la Percepcion de Seguridad en el Barrio") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+
+```
+
+# Graficos
+
+```{r Grafico n°1 Orientacion politica, echo=FALSE, warning=FALSE, message=FALSE}
+
+graph1 <- ELSOC_2022_Limitada %>% ggplot(aes(x = r13_ideol_01)) + 
+  geom_bar(fill = "springgreen4")+
+  labs(title = "Confianza en instituciones",
+       x = "Confianza en instituciones",
+       y = "Frecuencia") +
+  theme_bw()
+
+graph1
+```
+
+```{r Grafico n°2 Confianza en los Medios Tracionales, echo=FALSE, warning=FALSE, message=FALSE}
+
+graph2 <- ELSOC_2022_Limitada %>% ggplot(aes(x = c05_12)) + 
+  geom_bar(fill = "#cb0f22")+
+  labs(title = "Confianza en Medios de comunicacion tradicionales",
+       x = "Confianza en Medios de comunicacion tradicionales",
+       y = "Frecuencia") +
+  theme_bw()
+
+graph2
+```
+
+```{r Grafico_n3_Percepcion_seguridad_barrio, echo=FALSE, warning=FALSE, message=FALSE}
+
+graph3 <- ELSOC_2022_Limitada %>% ggplot(aes(x = t10)) + 
+  geom_bar(fill = "#008B8B")+
+  labs(title = "Percepcion de seguridad en el barrio",
+       x = "Percepcion de seguridad en el barrio",
+       y = "Frecuencia") +
+  theme_bw()
+
+graph3
+```
+
+```{r Grafico n°4 Ideologia x confiazna, echo=FALSE, warning=FALSE, message=FALSE}
+
+ggplot(ELSOC_2022_Limitada, aes(x = as.factor(r13_ideol_01), y = c05_12)) +
+  geom_boxplot(fill = "skyblue") +
+  labs(
+    x = "Ideología política",
+    y = "Cofianza en los medios de comunicacion tradiconales",
+    title = "Distribución de Ideologia politica según Cofianza en los medios de comunicacion"
+  ) +
+  theme_minimal()
+```
+
+# Análisis
+
+Para mantener un orden dentro de la interpretación de los datos observados, es prudente desglosar los resultados según variables donde, en primer lugar se destaca que la posición ideológica de los encuestados actua de una forma intersante, donde la derecha cuenta con un 13.7%, el centro solo con un 7.4%; la izquierda con un 18.7% y aquellos que deciden no posicionarse en algun sector, representan una mayoría con un 60.13%.
+
+Dentro de la confianza en los medios, se nota que esta es relativamente baja puesto que su mediana es un 2, indicando que más de la mitad de encuestados tiene un muy bajo nivel de confianza en los medios e incluso, su media se posiciona en un 2.26.
+
+Finalmente, la percepción de seguridad en los barrios de residencia es muy distinta, manteniendo una media de 3.53, cifra media alta donde este estadistico junto a la media nos dan cuenta de que efectivamente, la percepcion de seguridad en el barrio mantiene niveles altos.
+
+Sobre los gráficos bivariados, llama la atención la distribución que tiene la confianza en los medios de comunicación según la posición política de los encuestados ya que, si bien todos los sectores no tienden a superar el nivel 3 de confianza, los encuestados posicionados en tendencias de derecha comienzan la confianza en niveles más altos que el resto, donde además dentro del diagrama de cajas se observa la existencia de datos atípicos posicionados en el nivel de confianza más alto.
+
+A manera de cierre se puede establecer que, La orientación política y la confianza en los medios no incide en gran medida para la percepción de seguridad en el barrio, sin embargo, cabe recalcar que este es un análisis simple, se recomendaría hacer uso de otros modelos para profundizar más y llegar a conclusiones significativas.
+
+# Seccion Trabajo N°2
+
+## Construccion de Escala
+
+Construcción de una escala con el objetivo de sintetizar las variables incluidas en este estudio, se intentó construir una escala compuesta a partir de tres indicadores: posición política (r13_ideol_01), confianza en los medios de comunicación tradicionales (c05_12) y percepción de inseguridad en el barrio (t10). Para ello, se realizó una transformación lineal de cada variable a un rango común entre 0 y 1, y se calculó el promedio de estos valores por caso.
+
+```{r Contruccion de Escala, echo=FALSE, warning=FALSE, message=FALSE}
+
+pacman::p_load(psych) # se carga la base de datos Psych para que se pueda calcular el Alpha de Combrach y se pueda construrir la escala 
+
+ELSOC_Escala <- ELSOC_Long_2016_2023 %>% 
+  filter(ola==6) %>%
+  select(r13_ideol_01,
+         c05_12,
+         t10)
+```
+
+Como se procedio a generar un nuevo elemento se procede nuevamente a eliminar los NA
+
+```{r Eliminar los NA de Escala, echo=FALSE, warning=FALSE, message=FALSE}
+
+ELSOC_Limpia <- ELSOC_Escala %>% 
+  set_na(., na = c(-666,-777,-888,-999)) %>% 
+  na.omit()
+```
+
+Ahora se puede trabajar directamente en la creacion de la Escala ya que se han dejado de lado los NA
+
+```{r Primer Paso de Construccion de escala , echo=FALSE, warning=FALSE, message=FALSE}
+
+ELSOC_Limpia <- ELSOC_Limpia %>%
+  mutate(
+    r13_ideol_01 = as.numeric(r13_ideol_01),
+    c05_12       = as.numeric(c05_12),
+    t10          = as.numeric(t10))
+
+ELSOC_Limpia$r13_ideol_01 <- car::recode(ELSOC_Limpia$r13_ideol_01, 
+                                        "c(1,6)=0; c(2)=1; c(3)=2; c(4)=3; c(5)=4")
+ELSOC_Limpia$c05_12 <- car::recode(ELSOC_Limpia$c05_12, 
+                                   "c(1)=0; c(2)=1; c(3)=2; c(4)=3; c(5)=4")
+ELSOC_Limpia$t10 <- car::recode(ELSOC_Limpia$t10, 
+                                "c(1)=0; c(2)=1; c(3)=2; c(4)=3; c(5)=4")
+```
+
+Nuestro primer paso a crear una funcional, fue opercionalizar las variables para que partes desde el punto mas bajo posible siendo 0, no presenta mayores problemas para el entendimiento del trabajo lo mas importante a notar es que para el caso de la variable r13_ideol_01 es que se debe el 1 (derecha) y 6 (ninguno) se consideraran derecha desde la perspectiva en que resultados anteriores (vease grafico 4), sus resultados se tienden a coincidir, aparte de eso ningun otro cambio es relevante para esta operacionlizacion
+
+```{r Segundo Paso de Construccion de escala , echo=FALSE, warning=FALSE, message=FALSE}
+
+cor(ELSOC_Limpia)
+
+```
+
+Ahora analizamos la correlacion, entre las variables que seran usadas para analizar nuestra escala, como primer elemento notamos que no se ven numero negativos por ende todas las variables selccionadas apuntan hacia la misma direccion, asi que no se deben tratar mas la variables ya que no hay variables invertidas.
+
+Como segundo elemento podemos notar que las correlaciones entre variables son relativamente debiles, ya que ninguna supera el 0.10 minimo para que sean considerardas como debiles para este caso en particular la correlacion entre variables es inexistente, para considerciones futuras se deberan buscar variables que mejor representen la hipotesis de este trabajo
+
+```{r Tercer Paso de Construccion de escala , echo=FALSE, warning=FALSE, message=FALSE}
+
+psych::alpha(ELSOC_Limpia)
+
+```
+
+Posteriormente, se evaluó la consistencia interna de la escala mediante el coeficiente alfa de Cronbach, obteniendo un resultado de raw alpha = 0.060, lo cual indica una baja fiabilidad interna entre variables nuevamente demuestra que las variables no estan midiendo el mismo conjunto de datos.
+
+```{r Cuarto Paso de Construccion de escala , echo=FALSE, warning=FALSE, message=FALSE}
+
+ELSOC_Limpia <- ELSOC_Limpia %>% 
+  rowwise() %>% 
+  mutate(MediosporPosicion = sum(r13_ideol_01,t10,c05_12))
+summary(ELSOC_Limpia$MediosporPosicion)
+```
+
+Finalmente la escala esta contruida, que va desde el numero mas minimo posible siendo este 0 a un maximo de 12, obviamente como se ha detectado previamente esta no es significativa en ningun sentido ya que tanto los alphas de combrach presentados como los resultados de correlacion entre variables
+
+## Grafico de la escala 
+
+```{r Grafico de la escala  , echo=FALSE, warning=FALSE, message=FALSE}
+
+hist(ELSOC_Limpia$MediosporPosicion,
+     main = "Escala de Confianza en Medios segun Posicion Politica",
+     xlab = "Promedio de respuestas (1 = No Confia, 5 = Confia Mucho)",
+     col = "#607B8B", breaks = 5)
+```
+
+Para este grafico se puede apreciar una tendencia clara a que ni confiar ni se deconfia de los medios de comunicacion segun esta escala, es mas raro confiar plenamente en ellos.
+
+## interpretacion de la escala
+
+Este resultado era esperable, dado que las tres variables representan dimensiones conceptualmente distintas y no necesariamente deben estar correlacionadas entre sí. Desde un punto de vista metodológico, esto sugiere que no es adecuado combinarlas en una única escala. Aun así, el ejercicio resulta útil para familiarizarse con el procedimiento de estandarización y evaluación de escalas, tal como se ha solicitado en este trabajo. Esto se ve reforzado por los resultados expuesto en la prueba del alpha de Combrach y por la correlacion entre variables.
+
+Esto puede sugerir, quizas la mas simple de todas es que la posicion politica no influye en como se perciben los medios de comunicacion, asi explicando la baja correlacion entre variables aqui presentes. elevando la pregunta que variable esta influyendo entonces en la confianza en los medios en la poblacion chilena.
