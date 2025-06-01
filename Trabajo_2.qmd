@@ -319,7 +319,7 @@ summary(ELSOC_Limpia$MediosporPosicion)
 
 Finalmente la escala esta contruida, que va desde el numero mas minimo posible siendo este 0 a un maximo de 12, obviamente como se ha detectado previamente esta no es significativa en ningun sentido ya que tanto los alphas de combrach presentados como los resultados de correlacion entre variables
 
-## Grafico de la escala 
+## Grafico de la escala
 
 ```{r Grafico de la escala  , echo=FALSE, warning=FALSE, message=FALSE}
 

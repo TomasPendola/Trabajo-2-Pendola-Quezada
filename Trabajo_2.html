@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tomás Péndola y Erick Quezada">
+
+<title>Percepcion de Inseguridad Segun Orientacion Politica</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="Trabajo_2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Trabajo_2_files/libs/quarto-html/quarto.js"></script>
+<script src="Trabajo_2_files/libs/quarto-html/popper.min.js"></script>
+<script src="Trabajo_2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Trabajo_2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Trabajo_2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Trabajo_2_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Trabajo_2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Trabajo_2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Trabajo_2_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="Trabajo_2_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="Trabajo_2_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Percepcion de Inseguridad Segun Orientacion Politica</h1>
+<p class="subtitle lead">R para el análisis de datos</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autor/a</div>
+    <div class="quarto-title-meta-contents">
+             <p>Tomás Péndola y Erick Quezada </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de publicación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">29 de mayo de 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>En el contexto actual chileno, donde nos acercamos a las próximas elecciones presidenciales, se han intensificado los discursos mediáticos por parte de los distintos sectores políticos que buscan llegar al sillón presidencial en 2026. Múltiples debates, entrevistas y comentarios han comenzado a circular entre la población chilena, abordando tópicos troncales en las futuras agendas y dejando entrever distintas posturas ideológicas y pragmáticas frente a ellos.</p>
+<p>En este escenario, decidimos investigar una de las mayores preocupaciones de la ciudadanía. Tal como indica el estudio <em>Preocupaciones del Mundo</em> de la empresa de investigación Ipsos (2024), el sondeo arrojó que en Chile el tema del crimen y la violencia lidera la lista de preocupaciones con un 69%.</p>
+<p>Chile lleva tiempo enfrentando un drama importante en torno a este tópico, lo que se refleja en la amplia literatura existente, especialmente desde enfoques que lo abordan mediante variables sociodemográficas. Sin embargo, retomando el actual contexto electoral, nos interesa en particular analizar la incidencia de los medios de comunicación tradicionales, los cuales se encargan de divulgar las agendas de los candidatos y que, estos no solo informan sino que también ayudan a construir marcos interpretativos de la realidad desde una posicion aventajada <span class="citation" data-cites="teuna.vandijk2016">(<a href="#ref-teuna.vandijk2016" role="doc-biblioref">Teun A. van Dijk y Dijk 2016</a>)</span>. Al mismo tiempo, buscamos entender cómo se articula esta percepción de inseguridad en relación con la tendencia política de la ciudadanía.</p>
+<p>Al respecto, autores como <span class="citation" data-cites="juanjomedina2003">(<a href="#ref-juanjomedina2003" role="doc-biblioref">Juanjo Medina et&nbsp;al. 2003</a>)</span> han señalado que aparentemente existe una relación directa entre poseer una posición más de derecha y el miedo al delito (p.&nbsp;11). Sin embargo, esta relación no implica necesariamente una causalidad, sino que podría estar enmarcada en un concepto más complejo de “percepción emocional”. Tal como indican <span class="citation" data-cites="marcelamuratori2015">(<a href="#ref-marcelamuratori2015" role="doc-biblioref">Marcela Muratori et&nbsp;al. 2015</a>)</span>, la tendencia política influye en un conjunto de percepciones que terminan delegando en “problemáticas de relevancia social, como la inseguridad y el miedo al delito” (p.&nbsp;17).</p>
+<p>Es por ello que el presente trabajo buscará analizar la percepción de inseguridad según la orientación política y la confianza en los medios. Esto, enmarcado en el clima político actual chileno, donde la polarización entre los sectores políticos aumenta de cara a las próximas elecciones presidenciales. Por otro lado, en esta suerte de precampaña, muchos discursos mediáticos ofrecidos por los candidatos han puesto especial foco en el tema de la seguridad, presentándolo como un asunto que debe ser atendido cuanto antes. Consideramos, entonces, relevante comprender qué tanto inciden en la percepción de inseguridad variables como la orientación política y la confianza en los medios de comunicación, ya que planteamos como hipótesis que aquellos encuestados con una mayor tendencia política hacia la derecha y con niveles más altos de confianza en los medios tenderán a mantener mayores niveles de percepción de inseguridad.</p>
+<p>Para ello, se analizarán los datos recogidos por el COES a través de su estudio ELSOC del año 2023, centrando el análisis en las variables de “Orientación política”, “Confianza en los medios” y “Percepción de seguridad del barrio”. La elección de esta base responde a su carácter representativo a nivel nacional y a su solidez metodológica, lo que permite explorar con mayor profundidad las relaciones entre posicionamiento político, confianza institucional y percepciones subjetivas de inseguridad.</p>
+</section>
+<section id="variables" class="level1">
+<h1>Variables</h1>
+<p>Como se mencionó anteriormente, las variables a utilizar serán las siguientes:</p>
+<ol type="1">
+<li>Posición Política (r13_ideol_01)</li>
+<li>Confianza en los medios de comunicación tradicionales (c05_12)</li>
+<li>Percepción de inseguridad en el barrio de residencia (t10_p).</li>
+</ol>
+<p>Para efectos prácticos, se modificaron las categorias de respuesta de la variable r13_ideol_01 en (Derecha, Centro, Izquierda, Ningúno).</p>
+<p>Esto lo podemos repetir para la carga de la base de datos y el procesamiento de los datos.</p>
+<p>Ahora con la base datos abierta procederemos a describr las variables que se usaran para este trabajo, se procedera a Opercionalizar las variables</p>
+<p>Se Agrupan los no sabe no responde dentro de los NA y ahora se procederan a ser eliminados</p>
+<section id="descripción-de-variables" class="level2">
+<h2 class="anchored" data-anchor-id="descripción-de-variables">Descripción de variables</h2>
+<p>En este caso, se seleccionaron las variables:</p>
+<p>-r13_ideol_01: Sector idiologico con el que se identifica el encuestado</p>
+<p>Ahora se hara una tabla de frecuencias para esta variable categorica</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla de Frecuencias de Ideologia Politica con Total</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">r13_ideol_01</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Porcentaje</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Derecha</td>
+<td style="text-align: right;">530</td>
+<td style="text-align: right;">13.77</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Centro</td>
+<td style="text-align: right;">285</td>
+<td style="text-align: right;">7.40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Izquierda</td>
+<td style="text-align: right;">720</td>
+<td style="text-align: right;">18.70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ninguno</td>
+<td style="text-align: right;">2315</td>
+<td style="text-align: right;">60.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total</td>
+<td style="text-align: right;">3850</td>
+<td style="text-align: right;">100.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<ul>
+<li>c05_12: Grado de Confianza: en los medios de comunicacion tradicionales</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla de Descriptivos para la Confianza en los Medios</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">media</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">mediana</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sd</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">max</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">c05_12</td>
+<td style="text-align: right;">2.26026</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.0549</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3850</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<ul>
+<li>t10: Percepcion de seguridad del barrio</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Tabla de Descriptivos para la Percepcion de Seguridad en el Barrio</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">media</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">mediana</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sd</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">max</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">t10</td>
+<td style="text-align: right;">3.531948</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.008739</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3850</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+</section>
+<section id="graficos" class="level1">
+<h1>Graficos</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Trabajo_2_files/figure-html/Grafico%20n°1%20Orientacion%20politica-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Trabajo_2_files/figure-html/Grafico%20n°2%20Confianza%20en%20los%20Medios%20Tracionales-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Trabajo_2_files/figure-html/Grafico_n3_Percepcion_seguridad_barrio-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Trabajo_2_files/figure-html/Grafico%20n°4%20Ideologia%20x%20confiazna-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="análisis" class="level1">
+<h1>Análisis</h1>
+<p>Para mantener un orden dentro de la interpretación de los datos observados, es prudente desglosar los resultados según variables donde, en primer lugar se destaca que la posición ideológica de los encuestados actua de una forma intersante, donde la derecha cuenta con un 13.7%, el centro solo con un 7.4%; la izquierda con un 18.7% y aquellos que deciden no posicionarse en algun sector, representan una mayoría con un 60.13%.</p>
+<p>Dentro de la confianza en los medios, se nota que esta es relativamente baja puesto que su mediana es un 2, indicando que más de la mitad de encuestados tiene un muy bajo nivel de confianza en los medios e incluso, su media se posiciona en un 2.26.</p>
+<p>Finalmente, la percepción de seguridad en los barrios de residencia es muy distinta, manteniendo una media de 3.53, cifra media alta donde este estadistico junto a la media nos dan cuenta de que efectivamente, la percepcion de seguridad en el barrio mantiene niveles altos.</p>
+<p>Sobre los gráficos bivariados, llama la atención la distribución que tiene la confianza en los medios de comunicación según la posición política de los encuestados ya que, si bien todos los sectores no tienden a superar el nivel 3 de confianza, los encuestados posicionados en tendencias de derecha comienzan la confianza en niveles más altos que el resto, donde además dentro del diagrama de cajas se observa la existencia de datos atípicos posicionados en el nivel de confianza más alto.</p>
+<p>A manera de cierre se puede establecer que, La orientación política y la confianza en los medios no incide en gran medida para la percepción de seguridad en el barrio, sin embargo, cabe recalcar que este es un análisis simple, se recomendaría hacer uso de otros modelos para profundizar más y llegar a conclusiones significativas.</p>
+</section>
+<section id="seccion-trabajo-n2" class="level1">
+<h1>Seccion Trabajo N°2</h1>
+<section id="construccion-de-escala" class="level2">
+<h2 class="anchored" data-anchor-id="construccion-de-escala">Construccion de Escala</h2>
+<p>Construcción de una escala con el objetivo de sintetizar las variables incluidas en este estudio, se intentó construir una escala compuesta a partir de tres indicadores: posición política (r13_ideol_01), confianza en los medios de comunicación tradicionales (c05_12) y percepción de inseguridad en el barrio (t10). Para ello, se realizó una transformación lineal de cada variable a un rango común entre 0 y 1, y se calculó el promedio de estos valores por caso.</p>
+<p>Como se procedio a generar un nuevo elemento se procede nuevamente a eliminar los NA</p>
+<p>Ahora se puede trabajar directamente en la creacion de la Escala ya que se han dejado de lado los NA</p>
+<p>Nuestro primer paso a crear una funcional, fue opercionalizar las variables para que partes desde el punto mas bajo posible siendo 0, no presenta mayores problemas para el entendimiento del trabajo lo mas importante a notar es que para el caso de la variable r13_ideol_01 es que se debe el 1 (derecha) y 6 (ninguno) se consideraran derecha desde la perspectiva en que resultados anteriores (vease grafico 4), sus resultados se tienden a coincidir, aparte de eso ningun otro cambio es relevante para esta operacionlizacion</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>             r13_ideol_01      c05_12        t10
+r13_ideol_01  1.000000000 0.003598821 0.01185843
+c05_12        0.003598821 1.000000000 0.06269911
+t10           0.011858434 0.062699109 1.00000000</code></pre>
+</div>
+</div>
+<p>Ahora analizamos la correlacion, entre las variables que seran usadas para analizar nuestra escala, como primer elemento notamos que no se ven numero negativos por ende todas las variables selccionadas apuntan hacia la misma direccion, asi que no se deben tratar mas la variables ya que no hay variables invertidas.</p>
+<p>Como segundo elemento podemos notar que las correlaciones entre variables son relativamente debiles, ya que ninguna supera el 0.10 minimo para que sean considerardas como debiles para este caso en particular la correlacion entre variables es inexistente, para considerciones futuras se deberan buscar variables que mejor representen la hipotesis de este trabajo</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Reliability analysis   
+Call: psych::alpha(x = ELSOC_Limpia)
+
+  raw_alpha std.alpha G6(smc) average_r  S/N   ase mean  sd median_r
+     0.061     0.074   0.052     0.026 0.08 0.055  1.6 0.7    0.012
+
+    95% confidence boundaries 
+         lower alpha upper
+Feldt    -0.06  0.06  0.17
+Duhachek -0.05  0.06  0.17
+
+ Reliability if an item is dropped:
+             raw_alpha std.alpha G6(smc) average_r    S/N alpha se var.r  med.r
+r13_ideol_01    0.1176    0.1180  0.0627    0.0627 0.1338    0.061    NA 0.0627
+c05_12          0.0218    0.0234  0.0119    0.0119 0.0240    0.063    NA 0.0119
+t10             0.0069    0.0072  0.0036    0.0036 0.0072    0.066    NA 0.0036
+
+ Item statistics 
+               n raw.r std.r r.cor r.drop mean   sd
+r13_ideol_01 828  0.70  0.57 0.038  0.010 0.94 1.46
+c05_12       828  0.54  0.60 0.173  0.038 1.51 1.08
+t10          828  0.51  0.60 0.194  0.047 2.40 0.99
+
+Non missing response frequency for each item
+                0    1    2    3    4 miss
+r13_ideol_01 0.66 0.06 0.10 0.06 0.12    0
+c05_12       0.20 0.29 0.34 0.12 0.05    0
+t10          0.04 0.17 0.23 0.48 0.08    0</code></pre>
+</div>
+</div>
+<p>Posteriormente, se evaluó la consistencia interna de la escala mediante el coeficiente alfa de Cronbach, obteniendo un resultado de raw alpha = 0.060, lo cual indica una baja fiabilidad interna entre variables nuevamente demuestra que las variables no estan midiendo el mismo conjunto de datos.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   3.000   5.000   4.856   6.000  12.000 </code></pre>
+</div>
+</div>
+<p>Finalmente la escala esta contruida, que va desde el numero mas minimo posible siendo este 0 a un maximo de 12, obviamente como se ha detectado previamente esta no es significativa en ningun sentido ya que tanto los alphas de combrach presentados como los resultados de correlacion entre variables</p>
+</section>
+<section id="grafico-de-la-escala" class="level2">
+<h2 class="anchored" data-anchor-id="grafico-de-la-escala">Grafico de la escala</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Trabajo_2_files/figure-html/Grafico%20de%20la%20escala%20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Para este grafico se puede apreciar una tendencia clara a que ni confiar ni se deconfia de los medios de comunicacion segun esta escala, es mas raro confiar plenamente en ellos.</p>
+</section>
+<section id="interpretacion-de-la-escala" class="level2">
+<h2 class="anchored" data-anchor-id="interpretacion-de-la-escala">interpretacion de la escala</h2>
+<p>Este resultado era esperable, dado que las tres variables representan dimensiones conceptualmente distintas y no necesariamente deben estar correlacionadas entre sí. Desde un punto de vista metodológico, esto sugiere que no es adecuado combinarlas en una única escala. Aun así, el ejercicio resulta útil para familiarizarse con el procedimiento de estandarización y evaluación de escalas, tal como se ha solicitado en&nbsp;este&nbsp;trabajo. Esto se ve reforzado por los resultados expuesto en la prueba del alpha de Combrach y por la correlacion entre variables.</p>
+<p>Esto puede sugerir, quizas la mas simple de todas es que la posicion politica no influye en como se perciben los medios de comunicacion, asi explicando la baja correlacion entre variables aqui presentes. elevando la pregunta que variable esta influyendo entonces en la confianza en los medios en la poblacion chilena.</p>
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Referencias</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-juanjomedina2003" class="csl-entry" role="listitem">
+Juanjo Medina, Juanjo Medina, Juanjo Medina, y Juanjo Medina. 2003. <span>«Inseguridad ciudadana, miedo al delito y policía en España»</span>, enero.
+</div>
+<div id="ref-marcelamuratori2015" class="csl-entry" role="listitem">
+Marcela Muratori, Marcela Muratori, Marcela Muratori, Marcela Muratori, Elena Mercedes Zubieta, Elena Mercedes Zubieta, y Elena Mercedes Zubieta. 2015. <span>«Clima emocional, inseguridad y miedo al delito: Percepciones diferenciales en función del auto-posicionamiento ideológico»</span> 11 (22): 7-18.
+</div>
+<div id="ref-teuna.vandijk2016" class="csl-entry" role="listitem">
+Teun A. van Dijk, y Teun A. van Dijk. 2016. <span>«Análisis Crítico del Discurso»</span>, n.º 30 (enero): 203-22. <a href="https://doi.org/10.4206/rev.austral.cienc.soc.2016.n30-10">https://doi.org/10.4206/rev.austral.cienc.soc.2016.n30-10</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
