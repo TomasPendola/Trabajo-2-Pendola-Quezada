@@ -321,9 +321,9 @@ Finalmente la escala esta contruida, que va desde el numero mas minimo posible s
 
 ## Grafico de la escala
 
-```{r Grafico de la escala  , echo=FALSE, warning=FALSE, message=FALSE}
+```{r Grafico de la escala, echo=FALSE, warning=FALSE, message=FALSE}
 
-hist(ELSOC_Limpia$MediosporPosicion,
+graph5 <- hist(ELSOC_Limpia$MediosporPosicion,
      main = "Escala de Confianza en Medios segun Posicion Politica",
      xlab = "Promedio de respuestas (1 = No Confia, 5 = Confia Mucho)",
      col = "#607B8B", breaks = 5)
